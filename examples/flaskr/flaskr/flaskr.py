@@ -28,28 +28,33 @@ def parse_data_export():
             """Checkes to see if the customer is a match and adds a row to the report."""
             if hasattr(row['customer'], app.config['DATABASE'][0]):
                 print(row['first_name'], row['last_name'])
-                create_customer_report(row)
+                create_report(row, 'customer')
                 
             """Checkes to see if the customer is a match and adds a row to the report."""
             if hasattr(row['customer'], app.config['DATABASE'][0]):
                 print(row['first_name'], row['last_name'])
-                create_customer_report(row)
+                create_report(row, 'component')
 
-def create_customer_report(row):
+def create_report(row, report_type):
     """Create a component report."""
     fieldnames = ['SR Number', 
                   'Open Date', 
                   'Problem Summary', 
                   'AHT',  
                   'Category', 
+                  'Customer Name', 
                   'Engineer', 
                   'Component', 
                   'Severity Level', 
                   'Close Date', 
                   'Open Date']
-
+         
+    """Checkes to see if the customer is a match and adds a row to the report."""
+    if (report_type, customer):
+        report_name = 'customer.csv'   
+    
     """"DOES THIS EXIST IN THE DICT?"""
-    with open('names.csv', 'w') as csvfile:
+    with open(report_name, 'w') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         """Checks if this is a new file and if so adds the header."""
         if hasattr(row['customer'], app.config['DATABASE'][0]):        
