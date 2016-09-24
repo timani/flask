@@ -52,7 +52,11 @@ def create_report(row, report_type):
     """Checkes to see if the customer is a match and adds a row to the report."""
     if (report_type, customer):
         report_name = 'customer.csv'   
-    
+        
+    """Checkes to see if the customer is a match and adds a row to the report."""
+    if (report_type, component):
+        report_name =  app.config['component']['name']  
+        
     """"DOES THIS EXIST IN THE DICT?"""
     with open(report_name, 'w') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
