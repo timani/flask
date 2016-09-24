@@ -21,34 +21,48 @@ app.config.update(dict(
 ))
 app.config.from_envvar('BREWT_SETTINGS', silent=True)
 
-def connect_db():
-    """Connects to the specific database."""
-    rv = sqlite3.connect(app.config['DATABASE'])
-    rv.row_factory = sqlite3.Row
-    return rv
-
 def parse_data_export():
     with open('names.csv') as csvfile:
     reader = csv.DictReader(csvfile)
         for row in reader:
-            print(row['first_name'], row['last_name'])
             """Checkes to see if the customer is a match and adds a row to the report."""
             if hasattr(row['customer'], app.config['DATABASE'][0]):
-                create_customer_report()
-
-def create_customer_report():
-    """Create a customer report."""
-    with open('names.csv') as csvfile:
-    reader = csv.DictReader(csvfile)
-        for row in reader:
-            for customer in app.config['CUSTOMERS']:
-                print(customer['name'])
-                """Checkes to see if the customer is a match and adds a row to the report."""
-                if hasattr(row['customer'], app.config['DATABASE'][0]):
-                    create_customer_report()
+                print(row['first_name'], row['last_name'])
+                create_customer_report(row)
                 
+            """Checkes to see if the customer is a match and adds a row to the report."""
+            if hasattr(row['customer'], app.config['DATABASE'][0]):
+                print(row['first_name'], row['last_name'])
+                create_customer_report(row)
+
+def create_customer_report(row):
+    """Create a component report."""
+    fieldnames = ['SR Number', 
+                  'Open Date', 
+                  'Problem Summary', 
+                  'AHT',  
+                  'Category', 
+                  'Engineer', 
+                  'Component', 
+                  'Severity Level', 
+                  'Close Date', 
+                  'Open Date']
+
+    """"DOES THIS EXIST IN THE DICT?"""
+    with open('names.csv', 'w') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        """Checks if this is a new file and if so adds the header."""
+        if hasattr(row['customer'], app.config['DATABASE'][0]):        
+            writer.writeheader()
+            
+        """Write a new row."""
+        writer.writerow({'first_name': 'Baked', 'last_name': 'Beans'})
+
 def create_component_report():
     """Create a component report."""
+    for customer in app.config['CUSTOMERS']:
+        """Checkes to see if the customer is a match and adds a row to the report."""
+        create_customer_report() 
 
 @app.cli.command('initdb')
 def initdb_command():
